@@ -33,8 +33,9 @@ async function generateSources(
     typeMappings,
     silent,
     ignoreList,
+    outputDir,
   }: GenerateApiLibSourcesExecutorSchema,
-  outputDir: string,
+  
 ): Promise<number> {
   mkdirSync(outputDir, { recursive: true });
 
