@@ -1,5 +1,6 @@
 export interface GenerateApiLibSourcesExecutorSchema {
   generator: string;
+  outputDir: string;
   sourceSpecPathOrUrl: string;
   useDockerBuild?: boolean;
   sourceSpecUrlAuthorizationHeaders?: string;
