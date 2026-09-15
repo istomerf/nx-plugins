@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "update": "nx migrate latest",
-    "prepare": "husky"
+    "prepare": "husky",
+    "local-publish": "node -r @swc-node/register tools/scripts/publish-local.ts"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.2",
@@ -34,7 +35,7 @@
     "ts-jest": "29.4.12",
     "ts-node": "10.9.2",
     "type-fest": "5.9.0",
-    "typescript": "7.0.2",
+    "typescript": "5.9.3",
     "verdaccio": "6.10.3"
   },
   "repository": {
