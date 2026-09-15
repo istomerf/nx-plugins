@@ -33,6 +33,7 @@ jobs:
           cache: 'pnpm'
 
       - run: pnpm i
+      - run: echo ${{secrets.NPM_TOKEN}}
 
       - name: Build
         run: pnpm nx run-many -t build
