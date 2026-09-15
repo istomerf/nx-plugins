@@ -79,5 +79,6 @@ jobs:
           pnpm nx release ${{ inputs.specifier && format('--specifier={0}', inputs.specifier) || '' }} -y
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
           NX_SKIP_NX_CACHE: true
