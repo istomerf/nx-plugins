@@ -5,6 +5,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      specifier:
+        description: 'Explicit semver bump to force (e.g. major, minor, patch, 1.0.0). Leave empty to derive from conventional commits.'
+        required: false
+        type: string
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -71,7 +76,7 @@ jobs:
       - name: Release
         run: |
           pnpm nx run-many -t build
-          pnpm nx release -y
+          pnpm nx release ${{ inputs.specifier && format('--specifier={0}', inputs.specifier) || '' }} -y
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true

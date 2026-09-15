@@ -8,7 +8,7 @@
     "typeRoots": ["node_modules/@types"],
     "baseUrl": ".",
     "paths": {
-      "@driimus/nx-plugin-openapi": ["packages/nx-plugin-openapi"]
+      "@istomerf/nx-plugin-openapi": ["packages/nx-plugin-openapi"]
     }
   },
   "exclude": ["node_modules", "tmp"]
