@@ -89,7 +89,7 @@ describe('nx-plugin-openapi', () => {
 
     // TODO devise proper expectations
     expect(execute).toContain('Done deleting outputDir');
-    expect(existsSync(`./tmp/nx-e2e/proj/libs/${apiLibLibName}/src/index.ts`)).toBe(true);
+    expect(existsSync(`./tmp/nx-e2e/proj/libs/${apiLibLibName}/openapi-generated-sources/index.ts`)).toBe(true);
   }, 120000);
 
   it('should work with docker', () => {
@@ -111,7 +111,7 @@ describe('nx-plugin-openapi', () => {
 
     // TODO devise proper expectations
     expect(execute).toContain('Done deleting outputDir');
-    expect(existsSync(`./tmp/nx-e2e/proj/libs/${apiLibLibName}/src/index.ts`)).toBe(true);
+    expect(existsSync(`./tmp/nx-e2e/proj/libs/${apiLibLibName}/openapi-generated-sources/index.ts`)).toBe(true);
   }, 120000);
 
   it('should work with a remote spec', () => {
