@@ -38,7 +38,8 @@
     "version": {
       "conventionalCommits": true,
       "preserveLocalDependencyProtocols": false,
-      "manifestRootsToUpdate": ["dist/{projectRoot}"]
+      "manifestRootsToUpdate": ["dist/{projectRoot}"],
+      "fallbackCurrentVersionResolver": "disk"
     },
     "changelog": {
       "workspaceChangelog": {
