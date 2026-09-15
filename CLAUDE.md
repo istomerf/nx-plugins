@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-An Nx monorepo (pnpm workspaces) that publishes a single Nx plugin, `nx-plugin-openapi` — lets consumers keep OpenAPI spec files in Nx libs and auto-generate SDK/docs libs from them via `openapi-generator-cli`. Published as `@istomerf/nx-plugin-openapi` (note: internal generator/executor references, e2e tests, and `tsconfig.base.json` path mappings still use the legacy scope `@driimus/nx-plugin-openapi` — this is a known inconsistency, not a bug to silently "fix" mid-task).
+An Nx monorepo (pnpm workspaces) that publishes a single Nx plugin, `nx-plugin-openapi` — lets consumers keep OpenAPI spec files in Nx libs and auto-generate SDK/docs libs from them via `openapi-generator-cli`. Published as `@istomerf/nx-plugin-openapi`.
 
 Package manager is **pnpm** — use `pnpm`, not `npm`/`yarn`, for all installs and scripts. Node version is pinned in `.node-version` (`lts/krypton`).
 
