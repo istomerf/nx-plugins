@@ -42,6 +42,7 @@
       "fallbackCurrentVersionResolver": "disk"
     },
     "changelog": {
+      "automaticFromRef": "fdb2be27482a3e017e25f10f5d6f732ccfe43424",
       "workspaceChangelog": {
         "file": false
       },
