@@ -33,7 +33,6 @@
       "!{projectRoot}/src/test-setup.[jt]s"
     ]
   },
-  "nxCloudAccessToken": "ODljYzhlMjYtMmIzYS00OWUwLWE3NTItZWNlNDE0MTc5ZDlkfHJlYWQ=",
   "release": {
     "projects": ["packages/*", "!packages/*-e2e"],
     "version": {
