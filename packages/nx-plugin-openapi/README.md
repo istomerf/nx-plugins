@@ -1,6 +1,5 @@
 # OpenAPI Plugin for Nx
 
-[![NPM Version](https://img.shields.io/npm/v/%40driimus%2Fnx-plugin-openapi?style=flat)](https://npmjs.com/package/@driimus/nx-plugin-openapi)
 [![License](https://img.shields.io/npm/l/@driimus/nx-plugin-openapi)]()
 
 Keep your API spec files in libs, and auto-generate sources and docs.
@@ -12,7 +11,7 @@ It's a plugin for organizing OpenAPI spec files in libraries. You can then have 
 ## 💡 How to install
 
 ```sh
-nx add @driimus/nx-plugin-openapi
+npm install @istomerf/nx-plugin-openapi
 ```
 
 ### Prerequisites
@@ -24,7 +23,7 @@ Sources get auto-generated via [`openapi-generator-cli`](https://github.com/Open
 ### Create a lib for an API spec file
 
 ```sh
-nx generate @driimus/nx-plugin-openapi:api-spec
+nx generate @istomerf/nx-plugin-openapi:api-spec
 ```
 
 ```
@@ -39,7 +38,7 @@ CREATE libs/my-service-api-spec/src/my-service-api-spec.openapi.yml
 ### Create a lib for auto-generated docs
 
 ```sh
-nx generate @driimus/nx-plugin-openapi:api-lib
+nx generate @istomerf/nx-plugin-openapi:api-lib
 ```
 
 ```
@@ -62,7 +61,7 @@ UPDATE tsconfig.base.json
 ### Create a lib for auto-generated client sources
 
 ```sh
-nx generate @driimus/nx-plugin-openapi:api-lib
+nx generate @istomerf/nx-plugin-openapi:api-lib
 ```
 
 ```

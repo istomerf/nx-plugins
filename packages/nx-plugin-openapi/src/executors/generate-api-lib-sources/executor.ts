@@ -8,7 +8,7 @@ export default async function runExecutor(
   options: GenerateApiLibSourcesExecutorSchema,
   context: ExecutorContext,
 ): Promise<{ success: boolean }> {
-  const outputDir = context.projectsConfigurations.projects[context.projectName!].sourceRoot!;
+  const outputDir = options.outputDir
   const root = context.root;
 
   logger.info(`Deleting outputDir ${outputDir}...`);
@@ -17,7 +17,7 @@ export default async function runExecutor(
 
   logger.info(`Done deleting outputDir ${outputDir}.`);
 
-  await generateSources(options, outputDir);
+  await generateSources(options);
 
   return { success: true };
 }
@@ -35,7 +35,7 @@ async function generateSources(
     ignoreList,
     outputDir,
   }: GenerateApiLibSourcesExecutorSchema,
-  
+
 ): Promise<number> {
   mkdirSync(outputDir, { recursive: true });
 

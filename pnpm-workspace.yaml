@@ -1,2 +1,9 @@
 packages:
   - 'packages/*'
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  nx: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - open@11.0.4

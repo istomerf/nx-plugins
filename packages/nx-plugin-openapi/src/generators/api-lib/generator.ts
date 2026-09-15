@@ -25,6 +25,7 @@ const projectType: ProjectType = 'library';
 interface NormalizedSchema extends SetRequired<ApiLibGeneratorSchema, 'importPath' | 'generator'> {
   projectName: string;
   projectRoot: string;
+  outputDir: string;
   projectRootApiSpecLib?: string;
   projectDirectory: string;
   parsedTags: string[];
@@ -62,7 +63,7 @@ function normalizeOptions(host: Tree, options: SetRequired<ApiLibGeneratorSchema
   const projectName = projectDirectory.replace(new RegExp('/', 'g'), '-');
   const { libsDir, npmScope } = Object.assign({ npmScope: '' }, getWorkspaceLayout(host));
   const projectRoot = joinPathFragments(`${libsDir}/${projectDirectory}`);
-
+  const outputDir = projectRoot + '/openapi-generated-sources';
   const workspaceLayout = readNxJson(host)?.workspaceLayout ?? { libsDir: 'libs' };
   const projectRootApiSpecLib =
     !options.isRemoteSpec && options.sourceSpecLib ? `${workspaceLayout.libsDir}/${options.sourceSpecLib}` : undefined;
@@ -74,6 +75,7 @@ function normalizeOptions(host: Tree, options: SetRequired<ApiLibGeneratorSchema
     importPath,
     projectName,
     projectRoot,
+    outputDir,
     projectRootApiSpecLib,
     projectDirectory,
     parsedTags,
@@ -84,6 +86,7 @@ const getExecutorOptions = (options: NormalizedSchema): GenerateApiLibSourcesExe
   const executorOptions: GenerateApiLibSourcesExecutorSchema = {
     useDockerBuild: options.useDockerBuild,
     generator: options.generator,
+    outputDir: options.outputDir,
     sourceSpecPathOrUrl: options.isRemoteSpec
       ? options.sourceSpecUrl!
       : [options.projectRootApiSpecLib, options.sourceSpecFileRelativePath].join('/'),

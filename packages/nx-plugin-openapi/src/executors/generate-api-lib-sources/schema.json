@@ -14,7 +14,7 @@
     "generator": {
       "type": "string",
       "description": "The OpenAPITools generator you want to use",
-      "default": "typescript-fetch"
+      "default": "typescript-angular"
     },
     "additionalProperties": {
       "type": "string",
@@ -31,6 +31,10 @@
     "sourceSpecPathOrUrl": {
       "type": "string",
       "description": "The path (relative to the workspace root) or URL where the source OpenAPI spec file is located at"
+    },
+    "outputDir": {
+      "type": "string | boolean",
+      "description": "The path (relative to the workspace root) or URL where the generated OpenAPI file should go to"
     },
     "sourceSpecUrlAuthorizationHeaders": {
       "type": "string",
