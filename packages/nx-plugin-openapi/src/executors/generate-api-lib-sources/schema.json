@@ -33,7 +33,7 @@
       "description": "The path (relative to the workspace root) or URL where the source OpenAPI spec file is located at"
     },
     "outputDir": {
-      "type": "string | boolean",
+      "type": "string",
       "description": "The path (relative to the workspace root) or URL where the generated OpenAPI file should go to"
     },
     "sourceSpecUrlAuthorizationHeaders": {

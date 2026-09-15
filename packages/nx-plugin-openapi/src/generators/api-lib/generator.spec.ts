@@ -67,7 +67,7 @@ describe('api-lib schematic', () => {
 
         expect(root).toEqual(`libs/${remoteSchema.name}`);
         expect(targets?.['generate-sources']).toMatchObject({
-          executor: '@driimus/nx-plugin-openapi:generate-api-lib-sources',
+          executor: '@istomerf/nx-plugin-openapi:generate-api-lib-sources',
           options,
         });
       });
@@ -97,7 +97,7 @@ describe('api-lib schematic', () => {
 
         expect(root).toEqual(`libs/${localSchema.name}`);
         expect(targets?.['generate-sources']).toMatchObject({
-          executor: '@driimus/nx-plugin-openapi:generate-api-lib-sources',
+          executor: '@istomerf/nx-plugin-openapi:generate-api-lib-sources',
           options,
         });
       });

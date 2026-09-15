@@ -1,6 +1,39 @@
 {
-  "$id": "@driimus/nx-plugin-openapi:init",
+  "$id": "@istomerf/nx-plugin-openapi:init",
   "title": "Init generator options",
+  "description": "Bootstrap the workspace with a sample api-spec + api-lib pair, wired up and ready to run out of the box.",
   "type": "object",
-  "properties": {}
+  "properties": {
+    "skipBootstrap": {
+      "type": "boolean",
+      "description": "Only ensure @openapitools/openapi-generator-cli is installed, without scaffolding the sample api-spec/api-lib pair. Always set when init runs internally as part of the api-spec/api-lib generators.",
+      "default": false
+    },
+    "apiSpecName": {
+      "type": "string",
+      "description": "Name of the sample api-spec lib to bootstrap",
+      "default": "api-spec"
+    },
+    "apiLibName": {
+      "type": "string",
+      "description": "Name of the sample api-lib to bootstrap",
+      "default": "api-client"
+    },
+    "client": {
+      "type": "string",
+      "description": "A framework preset for the bootstrapped api-lib. Use \"custom\" to generate a plain typescript-fetch client with no framework dependency.",
+      "enum": ["custom", "angular", "react", "vue", "node"],
+      "default": "custom"
+    },
+    "useDockerBuild": {
+      "type": "boolean",
+      "description": "Have the bootstrapped api-lib run the generator inside a Docker container instead of via npx",
+      "default": false
+    },
+    "skipFormat": {
+      "description": "Skip formatting files.",
+      "type": "boolean",
+      "default": false
+    }
+  }
 }

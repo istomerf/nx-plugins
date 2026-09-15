@@ -38,7 +38,7 @@ export default async function (tree: Tree, schema: ApiLibGeneratorSchema) {
   const options = normalizeOptions(tree, schema);
 
   // Init
-  const initTask = await init(tree);
+  const initTask = await init(tree, { skipBootstrap: true });
   tasks.push(initTask);
 
   // Add Project
@@ -118,7 +118,7 @@ const addProject = (host: Tree, options: NormalizedSchema) => {
     projectType,
     targets: {
       'generate-sources': {
-        executor: '@driimus/nx-plugin-openapi:generate-api-lib-sources',
+        executor: '@istomerf/nx-plugin-openapi:generate-api-lib-sources',
         options: executorOptions,
       },
     },

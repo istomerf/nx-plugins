@@ -3,8 +3,7 @@
     "init": {
       "factory": "./src/generators/init/generator",
       "schema": "./src/generators/init/schema.json",
-      "description": "Initialize the @driimus/nx-plugin-openapi plugin",
-      "hidden": true
+      "description": "Bootstrap the workspace with a sample api-spec + api-lib pair, ready to run out of the box"
     },
     "api-spec": {
       "factory": "./src/generators/api-spec/generator",
