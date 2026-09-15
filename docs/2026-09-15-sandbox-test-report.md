@@ -53,6 +53,35 @@ Both fixes are committed to the working tree, not yet released.
 
 `pnpm run local-publish` hung twice at the Verdaccio/local-registry startup step (stuck cycling on "Creating project graph nodes", 0% CPU) while this repo's Nx daemon was warm alongside daemons for unrelated projects on the same machine. Stopping the daemon (`nx daemon --stop`) and re-running with `NX_DAEMON=false` resolved it immediately. Root cause not fully diagnosed — flagging in case it recurs for CI or other contributors.
 
-## Open item raised with the user
+## E2E harness rebuild
 
-The user asked mid-session for e2e tests. `tools/scripts/start-local-registry.ts` and `stop-local-registry.ts` (the old Jest `globalSetup`/`globalTeardown` for `nx-plugin-openapi-e2e`) were already deleted from the repo before this session started, but `packages/nx-plugin-openapi-e2e/tests/happy-path.spec.ts` still references them and still uses the old `@driimus` scope in its generator commands. This needs a decision on direction (restore the old scripts vs. rebuild the e2e harness around the new `publish-local.ts` flow, plus updating the spec to `@istomerf`) before that work proceeds.
+`tools/scripts/start-local-registry.ts` and `stop-local-registry.ts` (the Jest `globalSetup`/`globalTeardown` for `nx-plugin-openapi-e2e`) had been deleted from the repo before this session started, and `packages/nx-plugin-openapi-e2e/tests/happy-path.spec.ts` still referenced them and still used the old `@driimus` scope. Rebuilt around the existing `publish-local.ts` flow:
+
+- Extracted the build+Verdaccio+release-publish logic shared by manual and e2e testing into `tools/scripts/local-registry.ts` (`publishToLocalRegistry({ tag, version, build })`).
+- `tools/scripts/publish-local.ts` now calls the shared helper (tag `local`, builds first since it's invoked directly via `node`, not through Nx's task graph).
+- Restored `tools/scripts/start-local-registry.ts` / `stop-local-registry.ts` as thin Jest globalSetup/globalTeardown wrappers around the same helper (tag `e2e`, `build: false` since the `e2e` target already depends on `^build`).
+- Recreated `packages/nx-plugin-openapi-e2e/tests/happy-path.spec.ts` under the `@istomerf` scope.
+
+## E2E-specific bugs found and fixed (via repeated real e2e runs)
+
+1. **`create-nx-workspace` git-init collision** — scaffolding the throwaway workspace under `<repo>/tmp/nx-e2e/proj` failed with `git add`: `The following paths are ignored by one of your .gitignore files: tmp` (the repo's own `/tmp` gitignore rule), because `create-nx-workspace` detected the enclosing repo and skipped creating its own isolated `.git`. Fixed by adding `--skipGit` to the scaffold command — the throwaway workspace doesn't need its own git repo anyway.
+2. **`sudo rm -rf` cleanup hangs without a TTY** — `afterAll` used `sudo rm -rf ${projectDirectory}`, which blocks forever waiting for a password prompt in any non-interactive shell. Replaced with a plain `rmSync`, falling back to a non-interactive `sudo -n rm -rf` (swallowed on failure) only for the rare case of root-owned files left behind by the Docker case in CI.
+3. **`npm install` on a pnpm-structured `node_modules`** — `create-nx-workspace` defaults to pnpm on this machine, but `beforeAll` always runs plain `npm install @istomerf/nx-plugin-openapi@e2e`, which crashed with the same arborist bug found in the manual sandbox test (`Cannot read properties of null (reading 'matches')`). Fixed by pinning `--packageManager=npm` on the scaffold command so the workspace's `node_modules` layout matches the install command actually used.
+4. **Wrong assertion path** — `existsSync` checked `libs/${lib}/src/index.ts`, but the `api-lib` generator always writes output to `libs/${lib}/openapi-generated-sources/index.ts` (`generator.ts:67`). This assertion was already wrong before this session (inherited unchanged from before the scripts were deleted) and was never caught because the e2e suite couldn't run. Fixed both occurrences.
+
+## Final e2e suite result
+
+`nx e2e nx-plugin-openapi-e2e`: **5 of 6 tests passing.**
+
+| Test | Result |
+|---|---|
+| should work with a local spec | ✅ pass |
+| should work with docker | ❌ fail — **environmental**: Docker Desktop is not running on this machine (`Cannot connect to the Docker daemon`). Not a code defect; needs verification in an environment with Docker available (e.g. CI). |
+| should work with a remote spec | ✅ pass |
+| --global-properties: one value | ✅ pass |
+| --global-properties: multiple values | ✅ pass |
+| should support bootstrapping with nx add | ✅ pass |
+
+## Operational note (Verdaccio startup)
+
+`pnpm run local-publish` hung twice at the Verdaccio/local-registry startup step (stuck cycling on "Creating project graph nodes", 0% CPU) while this repo's Nx daemon was warm alongside daemons for unrelated projects on the same machine. Stopping the daemon (`nx daemon --stop`) and re-running with `NX_DAEMON=false` resolved it immediately. Root cause not fully diagnosed — flagging in case it recurs for CI or other contributors.
