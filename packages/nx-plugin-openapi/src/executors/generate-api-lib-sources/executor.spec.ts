@@ -24,11 +24,13 @@ describe('Command Runner Builder', () => {
     schema = {
       generator: 'typescript-fetch',
       sourceSpecPathOrUrl: 'open-api-spec.yml',
+      outputDir: './tmp/src/local',
     };
     dockerSchema = {
       generator: 'typescript-fetch',
       sourceSpecPathOrUrl: 'open-api-spec.yml',
       useDockerBuild: true,
+      outputDir: './tmp/src/docker',
     };
 
     context = (dir: string) => ({

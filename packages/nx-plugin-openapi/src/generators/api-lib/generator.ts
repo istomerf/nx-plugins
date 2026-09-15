@@ -18,6 +18,7 @@ import { join } from 'path';
 import type { SetRequired } from 'type-fest';
 import { GenerateApiLibSourcesExecutorSchema } from '../../executors/generate-api-lib-sources/schema';
 import init from '../init/generator';
+import { resolveClientOptions } from './client-presets';
 import { ApiLibGeneratorSchema } from './schema';
 
 const projectType: ProjectType = 'library';
@@ -31,7 +32,7 @@ interface NormalizedSchema extends SetRequired<ApiLibGeneratorSchema, 'importPat
   parsedTags: string[];
 }
 
-export default async function (tree: Tree, schema: SetRequired<ApiLibGeneratorSchema, 'generator'>) {
+export default async function (tree: Tree, schema: ApiLibGeneratorSchema) {
   const tasks: GeneratorCallback[] = [];
 
   const options = normalizeOptions(tree, schema);
@@ -57,7 +58,7 @@ export default async function (tree: Tree, schema: SetRequired<ApiLibGeneratorSc
   return runTasksInSerial(...tasks);
 }
 
-function normalizeOptions(host: Tree, options: SetRequired<ApiLibGeneratorSchema, 'generator'>): NormalizedSchema {
+function normalizeOptions(host: Tree, options: ApiLibGeneratorSchema): NormalizedSchema {
   const name = names(options.name).fileName;
   const projectDirectory = options.directory ? `${names(options.directory).fileName}/${name}` : name;
   const projectName = projectDirectory.replace(new RegExp('/', 'g'), '-');
@@ -69,9 +70,16 @@ function normalizeOptions(host: Tree, options: SetRequired<ApiLibGeneratorSchema
     !options.isRemoteSpec && options.sourceSpecLib ? `${workspaceLayout.libsDir}/${options.sourceSpecLib}` : undefined;
   const parsedTags = options.tags ? options.tags.split(',').map((s) => s.trim()) : [];
   const importPath = options.importPath || `@${npmScope}/${projectDirectory}`;
+  const { generator, additionalProperties } = resolveClientOptions(
+    options.client,
+    options.generator,
+    options.additionalProperties,
+  );
 
   return {
     ...options,
+    generator,
+    additionalProperties,
     importPath,
     projectName,
     projectRoot,

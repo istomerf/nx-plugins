@@ -1,6 +1,6 @@
 export interface GenerateApiLibSourcesExecutorSchema {
   generator: string;
-  outputDir: string | "typescript-angular" | "spring";
+  outputDir: string;
   sourceSpecPathOrUrl: string;
   useDockerBuild?: boolean;
   sourceSpecUrlAuthorizationHeaders?: string;

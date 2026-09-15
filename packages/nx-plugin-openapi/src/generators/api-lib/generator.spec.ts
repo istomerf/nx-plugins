@@ -62,7 +62,7 @@ describe('api-lib schematic', () => {
         const options = {
           generator: remoteSchema.generator,
           sourceSpecPathOrUrl: sourceSpecUrl,
-        } satisfies GenerateApiLibSourcesExecutorSchema;
+        } satisfies Partial<GenerateApiLibSourcesExecutorSchema>;
         const { root, targets } = readProjectConfiguration(appTree, defaultSchema.name);
 
         expect(root).toEqual(`libs/${remoteSchema.name}`);
@@ -89,7 +89,7 @@ describe('api-lib schematic', () => {
       } satisfies ApiLibGeneratorSchema;
       it('should update workspace.json', async () => {
         await libraryGenerator(appTree, localSchema);
-        const options: GenerateApiLibSourcesExecutorSchema = {
+        const options: Partial<GenerateApiLibSourcesExecutorSchema> = {
           generator: localSchema.generator,
           sourceSpecPathOrUrl: ['libs', localSchema.sourceSpecLib, localSchema.sourceSpecFileRelativePath].join('/'),
         };
@@ -107,6 +107,33 @@ describe('api-lib schematic', () => {
         const { implicitDependencies } = readProjectConfiguration(appTree, defaultSchema.name);
 
         expect(implicitDependencies).toEqual([localSchema.sourceSpecLib]);
+      });
+    });
+
+    describe('When a client preset is used', () => {
+      const clientSchema = {
+        ...defaultSchema,
+        generator: undefined,
+        client: 'angular',
+      } satisfies ApiLibGeneratorSchema;
+
+      it('should resolve the generator and additionalProperties from the preset', async () => {
+        await libraryGenerator(appTree, clientSchema);
+        const { targets } = readProjectConfiguration(appTree, defaultSchema.name);
+
+        expect(targets?.['generate-sources']?.options).toMatchObject({
+          generator: 'typescript-angular',
+          additionalProperties: 'ngVersion=17.0.0,providedInRoot=true',
+        });
+      });
+
+      it('should let an explicit generator override the preset', async () => {
+        await libraryGenerator(appTree, { ...clientSchema, generator: 'typescript-axios' });
+        const { targets } = readProjectConfiguration(appTree, defaultSchema.name);
+
+        expect(targets?.['generate-sources']?.options).toMatchObject({
+          generator: 'typescript-axios',
+        });
       });
     });
   });

@@ -1,6 +1,7 @@
 export interface ApiLibGeneratorSchema {
   name: string;
   useDockerBuild?: boolean;
+  client?: 'custom' | 'angular' | 'react' | 'vue' | 'node';
   generator?: string;
   tags?: string;
   directory?: string;
