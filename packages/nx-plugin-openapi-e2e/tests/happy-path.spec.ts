@@ -20,11 +20,14 @@ function createTestProject() {
     recursive: true,
   });
 
-  execSync(`npx --yes create-nx-workspace@latest ${projectName} --preset apps --nxCloud=skip --no-interactive`, {
-    cwd: dirname(projectDirectory),
-    stdio: 'inherit',
-    env: process.env,
-  });
+  execSync(
+    `npx --yes create-nx-workspace@latest ${projectName} --preset apps --nxCloud=skip --skipGit --packageManager=npm --no-interactive`,
+    {
+      cwd: dirname(projectDirectory),
+      stdio: 'inherit',
+      env: process.env,
+    },
+  );
 
   return projectDirectory;
 }
@@ -55,8 +58,17 @@ describe('nx-plugin-openapi', () => {
   });
 
   afterAll(() => {
-    // Cleanup the test project
-    execSync(`sudo rm -rf ${projectDirectory}`);
+    // Cleanup the test project. The docker-build case can leave root-owned files (e.g. in CI),
+    // so fall back to a non-interactive sudo — but never block on a password prompt.
+    try {
+      rmSync(projectDirectory, { recursive: true, force: true });
+    } catch {
+      try {
+        execSync(`sudo -n rm -rf ${projectDirectory}`);
+      } catch {
+        // best-effort cleanup of a throwaway directory; don't fail the suite over it
+      }
+    }
   });
 
   it('should work with a local spec', () => {
