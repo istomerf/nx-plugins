@@ -52,7 +52,7 @@ nx run api-client:generate-sources
 
 That's it — `libs/api-client` now has a real generated TypeScript client for the sample spec, importable as `@<npmScope>/api-client`. Swap `libs/api-spec/src/api-spec.openapi.yml` for your own spec and re-run `generate-sources` whenever it changes.
 
-`init` accepts the same `client` (`custom`/`angular`/`react`/`vue`/`node`) and `useDockerBuild` options as `api-lib` (see [Client presets](#client-presets)), plus `apiSpecName`/`apiLibName` to bootstrap under different project names:
+`init` accepts a `client` option (`custom`/`angular`/`react`/`vue`/`node`, see [Client presets](#client-presets)) and a `useDockerBuild` option, plus `apiSpecName`/`apiLibName` to bootstrap under different project names:
 
 ```sh
 nx generate @istomerf/nx-plugin-openapi:init --client=react --apiSpecName=petstore-spec --apiLibName=petstore-client
@@ -81,7 +81,7 @@ Drop your own `.yml`/`.json` OpenAPI spec into that lib (replacing the sample sp
 
 ```sh
 nx generate @istomerf/nx-plugin-openapi:api-lib my-service-api-client \
-  --client=react \
+  --generator=typescript-fetch \
   --sourceSpecLib=my-service-api-spec \
   --sourceSpecFileRelativePath=src/my-service-api-spec.openapi.yml
 ```
@@ -108,7 +108,7 @@ You don't need a local `api-spec` lib — point `api-lib` at a URL instead:
 
 ```sh
 nx generate @istomerf/nx-plugin-openapi:api-lib my-service-api-client \
-  --client=react \
+  --generator=typescript-fetch \
   --isRemoteSpec \
   --sourceSpecUrl=https://petstore.swagger.io/v2/swagger.json
 ```
@@ -132,6 +132,20 @@ Bootstraps a working `api-spec` + `api-lib` pair in one shot (see [Quick start](
 
 If a project named `apiSpecName` or `apiLibName` already exists, bootstrapping is skipped (with a warning) instead of touching that project.
 
+#### Client presets
+
+`client` pre-selects a generator and sensible `additionalProperties` for a target framework, resolves them internally, and passes the resulting `generator`/`additionalProperties` pair through to the `api-lib` generator it bootstraps — so you don't have to look them up yourself:
+
+| `client`   | Generator            | Default `additionalProperties`                          |
+| ---------- | --------------------- | --------------------------------------------------------- |
+| `angular`  | `typescript-angular`  | `ngVersion=17.0.0,providedInRoot=true`                     |
+| `react`    | `typescript-fetch`    | `supportsES6=true,withInterfaces=true`                     |
+| `vue`      | `typescript-axios`    | `supportsES6=true,withSeparateModelsAndApi=true`           |
+| `node`     | `typescript-node`     | `supportsES6=true`                                         |
+| `custom`   | *(none — set `generator` yourself)* |                                              |
+
+Note: `client`/preset support is currently limited to Nx v20+ workspaces using `tsconfig.base.json` path mappings (the same constraint the generator relies on for wiring up imports).
+
 ### `api-spec`
 
 Scaffolds a lib that just holds an OpenAPI spec file.
@@ -154,35 +168,18 @@ Scaffolds a lib whose `generate-sources` target runs `openapi-generator-cli` aga
 | `directory`                          | `-d`  | Directory to place the project in                                                                |               |
 | `tags`                               | `-t`  | Comma-separated Nx tags (for lint boundaries)                                                    |               |
 | `importPath`                         |       | Import path for the lib, e.g. `@myorg/my-lib`                                                     | `@<npmScope>/<dir>` |
-| `client`                             |       | Framework preset: `custom`, `angular`, `react`, `vue`, `node` — see [Client presets](#client-presets) |    `custom`    |
-| `generator`                          | `-g`  | An `openapi-generator-cli` generator name (e.g. `typescript-fetch`). Overrides the generator implied by `client` |  see below   |
+| `generator`                          | `-g`  | An `openapi-generator-cli` generator name (e.g. `typescript-fetch`). Required — there is no default | *(required)* |
 | `isRemoteSpec`                       | `-r`  | The spec file lives at a URL rather than in a workspace lib                                       |    `false`    |
 | `sourceSpecUrl`                      | `-u`  | URL of the remote spec file (when `isRemoteSpec`)                                                |               |
 | `sourceSpecUrlAuthorizationHeaders`  | `-a`  | URL-encoded `name:value` auth headers for the remote spec, comma-separated                       |               |
 | `sourceSpecLib`                      | `-l`  | Name of the workspace lib containing the spec file (when not `isRemoteSpec`)                     |               |
 | `sourceSpecFileRelativePath`         | `-f`  | Path to the spec file, relative to the `sourceSpecLib` project root                               |               |
-| `additionalProperties`               |       | Generator `--additional-properties`, comma-separated `key=value` pairs — merged over (and overriding) any preset defaults | |
+| `additionalProperties`               |       | Generator `--additional-properties`, comma-separated `key=value` pairs                            |               |
 | `globalProperties`                   |       | Generator `--global-property`, comma-separated `key=value` pairs                                 |               |
 | `useDockerBuild`                     |       | Run the generator via `docker run openapitools/openapi-generator-cli` instead of `npx` — no local Java needed, but Docker is | `false` |
 | `skipFormat`                         |       | Skip running Prettier on generated files                                                         |    `false`    |
 
-If neither `client` nor `generator` is set, the generator defaults to `typescript-fetch`.
-
-#### Client presets
-
-`client` pre-selects a generator and sensible `additionalProperties` for a target framework, so you don't have to look them up yourself:
-
-| `client`   | Generator            | Default `additionalProperties`                          |
-| ---------- | --------------------- | --------------------------------------------------------- |
-| `angular`  | `typescript-angular`  | `ngVersion=17.0.0,providedInRoot=true`                     |
-| `react`    | `typescript-fetch`    | `supportsES6=true,withInterfaces=true`                     |
-| `vue`      | `typescript-axios`    | `supportsES6=true,withSeparateModelsAndApi=true`           |
-| `node`     | `typescript-node`     | `supportsES6=true`                                         |
-| `custom`   | *(none — set `generator` yourself)* |                                              |
-
-Any `additionalProperties` you pass explicitly are merged on top of the preset's — matching keys override the preset value, everything else from the preset is kept. Passing `--generator` always overrides the generator implied by `client`, even if `client` is also set.
-
-Note: `client`/preset support is currently limited to Nx v20+ workspaces using `tsconfig.base.json` path mappings (the same constraint the generator relies on for wiring up imports).
+There is no default `generator` — `api-lib` always requires it to be passed explicitly. (If you want a framework preset that picks a sensible `generator`/`additionalProperties` pair for you, use `init`'s `client` option instead — see [Client presets](#client-presets).)
 
 ## ⚙️ `generate-api-lib-sources` executor
 

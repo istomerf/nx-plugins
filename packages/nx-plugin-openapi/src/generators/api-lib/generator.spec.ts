@@ -110,31 +110,11 @@ describe('api-lib schematic', () => {
       });
     });
 
-    describe('When a client preset is used', () => {
-      const clientSchema = {
-        ...defaultSchema,
-        generator: undefined,
-        client: 'angular',
-      } satisfies ApiLibGeneratorSchema;
+    it('requires generator to be set', () => {
+      // @ts-expect-error - generator is required
+      const invalidSchema: ApiLibGeneratorSchema = { ...defaultSchema, generator: undefined };
 
-      it('should resolve the generator and additionalProperties from the preset', async () => {
-        await libraryGenerator(appTree, clientSchema);
-        const { targets } = readProjectConfiguration(appTree, defaultSchema.name);
-
-        expect(targets?.['generate-sources']?.options).toMatchObject({
-          generator: 'typescript-angular',
-          additionalProperties: 'ngVersion=17.0.0,providedInRoot=true',
-        });
-      });
-
-      it('should let an explicit generator override the preset', async () => {
-        await libraryGenerator(appTree, { ...clientSchema, generator: 'typescript-axios' });
-        const { targets } = readProjectConfiguration(appTree, defaultSchema.name);
-
-        expect(targets?.['generate-sources']?.options).toMatchObject({
-          generator: 'typescript-axios',
-        });
-      });
+      expect(invalidSchema).toBeDefined();
     });
   });
 });

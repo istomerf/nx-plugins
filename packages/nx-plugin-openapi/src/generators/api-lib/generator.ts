@@ -18,7 +18,6 @@ import { join } from 'path';
 import type { SetRequired } from 'type-fest';
 import { GenerateApiLibSourcesExecutorSchema } from '../../executors/generate-api-lib-sources/schema';
 import init from '../init/generator';
-import { resolveClientOptions } from './client-presets';
 import { ApiLibGeneratorSchema } from './schema';
 
 const projectType: ProjectType = 'library';
@@ -70,16 +69,11 @@ function normalizeOptions(host: Tree, options: ApiLibGeneratorSchema): Normalize
     !options.isRemoteSpec && options.sourceSpecLib ? `${workspaceLayout.libsDir}/${options.sourceSpecLib}` : undefined;
   const parsedTags = options.tags ? options.tags.split(',').map((s) => s.trim()) : [];
   const importPath = options.importPath || `@${npmScope}/${projectDirectory}`;
-  const { generator, additionalProperties } = resolveClientOptions(
-    options.client,
-    options.generator,
-    options.additionalProperties,
-  );
 
   return {
     ...options,
-    generator,
-    additionalProperties,
+    generator: options.generator,
+    additionalProperties: options.additionalProperties,
     importPath,
     projectName,
     projectRoot,
