@@ -20,26 +20,9 @@
       "default": false,
       "x-prompt": "Should the build occur inside of a docker container?"
     },
-    "client": {
-      "type": "string",
-      "description": "A framework preset that pre-configures the generator and common additionalProperties for it. Use \"custom\" to specify the generator yourself.",
-      "enum": ["custom", "angular", "react", "vue", "node"],
-      "default": "custom",
-      "x-prompt": {
-        "message": "Which client framework are you generating an SDK for?",
-        "type": "list",
-        "items": [
-          { "value": "custom", "label": "Custom (specify the generator manually)" },
-          { "value": "angular", "label": "Angular" },
-          { "value": "react", "label": "React" },
-          { "value": "vue", "label": "Vue" },
-          { "value": "node", "label": "Node" }
-        ]
-      }
-    },
     "generator": {
       "type": "string",
-      "description": "The generator this lib will use to build an API SDK (e.g.: typescript-fetch). Overrides the generator implied by \"client\" when both are set. Defaults to typescript-fetch when neither is set.",
+      "description": "The generator this lib will use to build an API SDK (e.g.: typescript-fetch). There is no default — this must always be supplied.",
       "alias": "g"
     },
     "tags": {
@@ -106,6 +89,7 @@
     }
   },
   "required": [
-    "name"
+    "name",
+    "generator"
   ]
 }

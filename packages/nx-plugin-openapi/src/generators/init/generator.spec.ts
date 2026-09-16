@@ -36,6 +36,18 @@ describe('init schematic', () => {
     const apiLib = readProjectConfiguration(appTree, 'api-client');
     expect(apiLib.targets?.['generate-sources'].options).toMatchObject({
       sourceSpecPathOrUrl: 'libs/api-spec/src/api-spec.openapi.yml',
+      generator: 'typescript-fetch',
+    });
+    expect(apiLib.targets?.['generate-sources'].options.additionalProperties).toBeUndefined();
+  });
+
+  it('should resolve the generator and additionalProperties from the client preset when client is set', async () => {
+    await libraryGenerator(appTree, { client: 'angular' });
+
+    const apiLib = readProjectConfiguration(appTree, 'api-client');
+    expect(apiLib.targets?.['generate-sources'].options).toMatchObject({
+      generator: 'typescript-angular',
+      additionalProperties: 'ngVersion=17.0.0,providedInRoot=true',
     });
   });
 

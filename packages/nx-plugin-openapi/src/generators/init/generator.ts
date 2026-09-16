@@ -11,6 +11,7 @@ import {
 import apiLibGenerator from '../api-lib/generator';
 import apiSpecGenerator from '../api-spec/generator';
 import { openapiGeneratorCliVersion } from '../../utils/versions';
+import { resolveClientPreset } from './client-presets';
 // @ts-ignore
 import { InitGeneratorSchema } from './schema';
 
@@ -66,11 +67,14 @@ async function bootstrap(tree: Tree, schema: InitGeneratorSchema): Promise<Gener
     }),
   );
 
+  const { generator, additionalProperties } = resolveClientPreset(schema.client);
+
   tasks.push(
     await apiLibGenerator(tree, {
       name: apiLibName,
       isRemoteSpec: false,
-      client: schema.client ?? 'custom',
+      generator,
+      additionalProperties,
       useDockerBuild: schema.useDockerBuild ?? false,
       sourceSpecLib: apiSpecProjectName,
       sourceSpecFileRelativePath: `src/${apiSpecName}.openapi.yml`,
