@@ -12,23 +12,37 @@
     "apiSpecName": {
       "type": "string",
       "description": "Name of the sample api-spec lib to bootstrap",
-      "default": "api-spec"
+      "default": "api-spec",
+      "x-prompt": "What name would you like to use for the sample API spec lib?"
     },
     "apiLibName": {
       "type": "string",
       "description": "Name of the sample api-lib to bootstrap",
-      "default": "api-client"
+      "default": "api-client",
+      "x-prompt": "What name would you like to use for the sample API lib?"
     },
     "client": {
       "type": "string",
       "description": "A framework preset for the bootstrapped api-lib. Use \"custom\" to generate a plain typescript-fetch client with no framework dependency.",
       "enum": ["custom", "angular", "react", "vue", "node"],
-      "default": "custom"
+      "default": "custom",
+      "x-prompt": {
+        "message": "Which client framework are you generating an SDK for?",
+        "type": "list",
+        "items": [
+          { "value": "custom", "label": "Custom (specify the generator manually)" },
+          { "value": "angular", "label": "Angular" },
+          { "value": "react", "label": "React" },
+          { "value": "vue", "label": "Vue" },
+          { "value": "node", "label": "Node" }
+        ]
+      }
     },
     "useDockerBuild": {
       "type": "boolean",
       "description": "Have the bootstrapped api-lib run the generator inside a Docker container instead of via npx",
-      "default": false
+      "default": false,
+      "x-prompt": "Should the build occur inside of a docker container?"
     },
     "skipFormat": {
       "description": "Skip formatting files.",

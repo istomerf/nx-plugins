@@ -1,0 +1,26 @@
+schema: compressed-sdd
+created: 2026-09-16
+skip_specs: true
+verification:
+  ranAt: 2026-09-16T08:18:45.140Z
+  verdict: clean
+  counts:
+    critical: 0
+    warning: 0
+    suggestion: 0
+  evidence: []
+flow: |
+  FullFlow {
+    change: "init-generator-prompts"
+    phase: Done
+    maxFixAttempts: 3
+    fixAttempts: 0
+    lastVerifyVerdict: clean
+    history: [
+      { phase: Explore, at: "2026-09-16T00:00:00Z" }
+      { phase: Propose, at: "2026-09-16T00:05:00Z" }
+      { phase: Gate, at: "2026-09-16T00:10:00Z" }
+      { phase: Apply, at: "2026-09-16T00:20:00Z" }
+      { phase: Verify, at: "2026-09-16T00:25:00Z" }
+    ]
+  }

@@ -1,0 +1,46 @@
+schema: compressed-sdd
+context: >-
+  Nx monorepo (pnpm workspaces) publishing a single Nx plugin,
+  @istomerf/nx-plugin-openapi, to npm.
+
+  Stack: TypeScript, @nx/devkit generators/executors, Jest (unit tests), ESLint
+  (@nx/typescript + @nx/enforce-module-boundaries), Prettier (singleQuote, semi,
+  trailingComma all, printWidth 120, tabWidth 2).
+
+  Package manager is pnpm — never npm/yarn. Node version pinned via
+  .node-version.
+
+  Domain: lets consumers keep OpenAPI spec files in Nx libs and auto-generate
+  SDK/docs libs via openapi-generator-cli. Core pieces: generators/init (hidden
+  bootstrap), generators/api-spec (scaffolds a lib with an OpenAPI spec file),
+  generators/api-lib (scaffolds a lib wired to a generate-sources target),
+  executors/generate-api-lib-sources (shells out to openapi-generator-cli via
+  npx or Docker).
+
+  Conventional Commits are enforced by commitlint via a Husky commit-msg hook;
+  releases (nx release) auto-version from commit history in
+  .github/workflows/publish.yml on push to main — never hand-bump package.json
+  versions.
+
+  Executor/generator unit tests stub cross-spawn via
+  packages/nx-plugin-openapi/src/test/mockSpawn.ts rather than invoking the real
+  CLI.
+
+  e2e suite (nx-plugin-openapi-e2e) is a real, slow run: spins up a local
+  Verdaccio registry, publishes the plugin under the e2e dist-tag, scaffolds a
+  throwaway Nx workspace via create-nx-workspace, and needs network + Docker.
+
+  Generated libs' import paths are managed in tsconfig.base.json
+  compilerOptions.paths, auto-updated by the api-lib generator.
+rules:
+  plan:
+    - Name which generator(s) or the executor are affected (init / api-spec /
+      api-lib / generate-api-lib-sources) and whether tsconfig.base.json path
+      mappings need updating.
+    - Call out whether the change needs coverage in the e2e happy-path suite
+      (packages/nx-plugin-openapi-e2e/tests/happy-path.spec.ts), since it's slow
+      and requires network/Docker — don't assume unit tests alone are sufficient
+      for generator/executor changes.
+    - Note the Conventional Commit type the change implies (feat/fix/etc.,
+      including `!`/BREAKING CHANGE where relevant), since it drives the
+      automated release version bump.
