@@ -2,7 +2,7 @@ import { ExecutorContext } from '@nx/devkit';
 import { mkdtempSync, rmSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { FakeCliHandle, installFakeCli } from '../../test-support/fake-cli';
+import { createFakeCliScenario, FakeCliScenario, readFakeCliArgs } from '../../test-support/fake-cli';
 import runExecutor from './executor';
 import { WatchApiLibSourcesExecutorSchema } from './schema';
 
@@ -21,39 +21,30 @@ async function waitFor(predicate: () => boolean, timeoutMs = 3000, intervalMs = 
 }
 
 function createContext(root: string): ExecutorContext {
-  return {
-    root,
-    cwd: root,
-    isVerbose: false,
-    projectsConfigurations: { version: 2, projects: {} },
-    nxJsonConfiguration: {},
-    projectGraph: { nodes: {}, dependencies: {} },
-  };
+  return { root } as unknown as ExecutorContext;
 }
 
-describe('watch-api-lib-sources executor', () => {
+describe('watch-api-lib-sources executor (unmocked - real chokidar, real spawn, real fs)', () => {
   let workspaceRoot: string;
   let specPath: string;
-  let outputDir: string;
-  let fakeCli: FakeCliHandle;
+  let scenario: FakeCliScenario;
 
   beforeEach(() => {
     workspaceRoot = mkdtempSync(join(tmpdir(), 'watch-api-lib-sources-'));
     specPath = join(workspaceRoot, 'spec.yml');
-    outputDir = join(workspaceRoot, 'generated');
     writeFileSync(specPath, 'openapi: 3.0.0');
-    fakeCli = installFakeCli(['npx']);
+    scenario = createFakeCliScenario();
   });
 
   afterEach(() => {
-    fakeCli.restore();
     rmSync(workspaceRoot, { recursive: true, force: true });
+    rmSync(scenario.scratchDir, { recursive: true, force: true });
   });
 
   function baseOptions(): WatchApiLibSourcesExecutorSchema {
     return {
       generator: 'typescript-fetch',
-      outputDir,
+      outputDir: scenario.outputDir,
       sourceSpecPathOrUrl: specPath,
     };
   }
@@ -72,7 +63,7 @@ describe('watch-api-lib-sources executor', () => {
 
     // No watcher was started, so a spec file change must not invoke the fake CLI.
     await sleep(200);
-    expect(fakeCli.readCapturedArgs()).toEqual([]);
+    expect(readFakeCliArgs(scenario)).toEqual([]);
   });
 
   it('regenerates sources via the real CLI when the local spec file is saved (S01)', async () => {
@@ -84,10 +75,17 @@ describe('watch-api-lib-sources executor', () => {
     await sleep(150); // let the watcher become ready before triggering a change
     writeFileSync(specPath, 'openapi: 3.0.1');
 
-    await waitFor(() => fakeCli.readCapturedArgs().length > 0);
-    expect(fakeCli.readCapturedArgs()).toEqual(
-      expect.arrayContaining(['generate', '-i', specPath, '-g', 'typescript-fetch', '-o', outputDir]),
-    );
+    await waitFor(() => readFakeCliArgs(scenario).length > 0);
+    expect(readFakeCliArgs(scenario)).toEqual([
+      'openapi-generator-cli',
+      'generate',
+      '-i',
+      specPath,
+      '-g',
+      'typescript-fetch',
+      '-o',
+      scenario.outputDir,
+    ]);
 
     // Stop the continuous task the same way Nx would (process signal), so the
     // underlying watcher releases its file handle before the test ends.

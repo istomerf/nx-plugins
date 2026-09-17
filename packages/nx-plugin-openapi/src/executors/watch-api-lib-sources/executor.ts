@@ -7,7 +7,7 @@ const REMOTE_SPEC_PATTERN = /^https?:\/\//;
 
 export default async function* runExecutor(
   options: WatchApiLibSourcesExecutorSchema,
-  context: ExecutorContext,
+  _context: ExecutorContext,
 ): AsyncGenerator<{ success: boolean }> {
   const { sourceSpecPathOrUrl } = options;
 
