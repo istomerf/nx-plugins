@@ -32,6 +32,6 @@ Track A and Track B touch disjoint files (`executors/*`, `utils/*` vs. `generato
 
 - [x] V1 `pnpm nx test nx-plugin-openapi` passes in full, including all new and pre-existing executor/generator unit tests
 - [x] V2 `pnpm nx lint nx-plugin-openapi` passes
-- [ ] V3 Confirm `watch-sources`'s `continuous: true` marking excludes it from batch runs: `nx affected:test` / `nx run-many -t test` on a workspace containing a `watch-sources`-registered project does not attempt to execute that target (api-lib/watch-sources#S04)
-- [ ] V4 Manual smoke test: scaffold a local-spec `api-lib` project, run `nx run <lib>:watch-sources`, edit the spec file, confirm regeneration completes within roughly the 300ms debounce window, then stop the process and confirm it terminates cleanly
-- [ ] V5 COMMIT
+- [x] V3 Confirm `watch-sources`'s `continuous: true` marking excludes it from batch runs: `nx affected:test` / `nx run-many -t test` on a workspace containing a `watch-sources`-registered project does not attempt to execute that target (api-lib/watch-sources#S04)
+- [x] V4 Manual smoke test: scaffold a local-spec `api-lib` project, run `nx run <lib>:watch-sources`, edit the spec file, confirm regeneration completes within roughly the 300ms debounce window, then stop the process and confirm it terminates cleanly
+- [x] V5 COMMIT
