@@ -14,6 +14,8 @@ module.exports = {
     ],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  globalSetup: '<rootDir>/src/test-support/global-setup.ts',
+  globalTeardown: '<rootDir>/src/test-support/global-teardown.ts',
   coverageDirectory: '../../coverage/packages/nx-plugin-openapi',
   preset: '../../jest.preset.js',
 } satisfies Config;

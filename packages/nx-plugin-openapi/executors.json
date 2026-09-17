@@ -4,6 +4,11 @@
       "implementation": "./src/executors/generate-api-lib-sources/executor",
       "schema": "./src/executors/generate-api-lib-sources/schema.json",
       "description": "Generate API lib source files via @openapitools/openapi-generator-cli"
+    },
+    "watch-api-lib-sources": {
+      "implementation": "./src/executors/watch-api-lib-sources/executor",
+      "schema": "./src/executors/watch-api-lib-sources/schema.json",
+      "description": "Watch a local OpenAPI spec file and regenerate API lib source files on change"
     }
   }
 }

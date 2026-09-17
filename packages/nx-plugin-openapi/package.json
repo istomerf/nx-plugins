@@ -8,6 +8,7 @@
   "license": "MIT",
   "peerDependencies": {
     "@nx/workspace": ">= 20 < 24",
+    "chokidar": "^4.0.1",
     "cross-spawn": "^7.0.3",
     "rimraf": "^5.0.7"
   },

@@ -78,6 +78,13 @@ describe('api-lib schematic', () => {
 
         expect(implicitDependencies).toBeFalsy();
       });
+
+      it('should NOT add a watch-sources target to project configuration', async () => {
+        await libraryGenerator(appTree, remoteSchema);
+        const { targets } = readProjectConfiguration(appTree, defaultSchema.name);
+
+        expect(targets?.['watch-sources']).toBeUndefined();
+      });
     });
 
     describe('When the API spec file is local', () => {
@@ -107,6 +114,27 @@ describe('api-lib schematic', () => {
         const { implicitDependencies } = readProjectConfiguration(appTree, defaultSchema.name);
 
         expect(implicitDependencies).toEqual([localSchema.sourceSpecLib]);
+      });
+
+      it('should add a watch-sources target wired to the watch-api-lib-sources executor', async () => {
+        await libraryGenerator(appTree, localSchema);
+        const options: Partial<GenerateApiLibSourcesExecutorSchema> = {
+          generator: localSchema.generator,
+          sourceSpecPathOrUrl: ['libs', localSchema.sourceSpecLib, localSchema.sourceSpecFileRelativePath].join('/'),
+        };
+        const { targets } = readProjectConfiguration(appTree, defaultSchema.name);
+
+        expect(targets?.['watch-sources']).toMatchObject({
+          executor: '@istomerf/nx-plugin-openapi:watch-api-lib-sources',
+          options,
+        });
+      });
+
+      it('should register watch-sources with the same options as generate-sources', async () => {
+        await libraryGenerator(appTree, localSchema);
+        const { targets } = readProjectConfiguration(appTree, defaultSchema.name);
+
+        expect(targets?.['watch-sources']?.options).toEqual(targets?.['generate-sources']?.options);
       });
     });
 

@@ -112,6 +112,7 @@ const getExecutorOptions = (options: NormalizedSchema): GenerateApiLibSourcesExe
 
 const addProject = (host: Tree, options: NormalizedSchema) => {
   const executorOptions = getExecutorOptions(options);
+  const isLocalSpec = !options.isRemoteSpec && !!options.sourceSpecLib;
 
   addProjectConfiguration(host, options.projectName, {
     root: options.projectRoot,
@@ -122,6 +123,14 @@ const addProject = (host: Tree, options: NormalizedSchema) => {
         executor: '@istomerf/nx-plugin-openapi:generate-api-lib-sources',
         options: executorOptions,
       },
+      ...(isLocalSpec
+        ? {
+            'watch-sources': {
+              executor: '@istomerf/nx-plugin-openapi:watch-api-lib-sources',
+              options: executorOptions,
+            },
+          }
+        : {}),
     },
     implicitDependencies: !options.isRemoteSpec && options.sourceSpecLib ? [options.sourceSpecLib] : undefined,
     tags: options.parsedTags,

@@ -18,8 +18,7 @@ context: >-
   npx or Docker).
 
   Conventional Commits are enforced by commitlint via a Husky commit-msg hook;
-  releases (nx release) auto-version from commit history in
-  .github/workflows/publish.yml on push to main — never hand-bump package.json
+  releases (nx release) auto-version from commit history on push to main — never hand-bump package.json
   versions.
 
   Executor/generator unit tests stub cross-spawn via
