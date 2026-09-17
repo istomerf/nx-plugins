@@ -1,0 +1,17 @@
+schema: bdd
+created: 2026-09-17
+skip_specs: true
+flow: |
+  FullFlow {
+    change: "generate-api-lib-sources-unit-tests"
+    phase: Blocked
+    maxFixAttempts: 3
+    fixAttempts: 0
+    lastVerifyVerdict: unknown
+    history: [
+      { phase: Explore, at: "2026-09-17T00:00:00Z" }
+      { phase: Propose, at: "2026-09-17T00:05:00Z" }
+      { phase: Gate, at: "2026-09-17T00:10:00Z" }
+      { phase: Apply, at: "2026-09-17T00:15:00Z" }
+    ]
+  }
