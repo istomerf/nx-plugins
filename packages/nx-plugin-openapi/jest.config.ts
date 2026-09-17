@@ -1,4 +1,3 @@
-/* eslint-disable */
 import type { Config } from 'jest';
 
 module.exports = {

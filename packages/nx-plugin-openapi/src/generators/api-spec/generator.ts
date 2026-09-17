@@ -79,9 +79,9 @@ const addProject = (host: Tree, options: NormalizedSchema) => {
 };
 
 function createFiles(host: Tree, options: NormalizedSchema) {
-  !options.withSample && host.write(joinPathFragments(options.projectRoot, 'src/.gitkeep'), '');
+  if (!options.withSample) host.write(joinPathFragments(options.projectRoot, 'src/.gitkeep'), '');
 
-  options.withSample &&
+  if (options.withSample)
     generateFiles(host, joinPathFragments(__dirname, './files'), options.projectRoot, {
       ...options,
       ...names(options.name),

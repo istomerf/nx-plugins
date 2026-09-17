@@ -85,13 +85,20 @@ function normalizeOptions(host: Tree, options: ApiLibGeneratorSchema): Normalize
 }
 
 const getExecutorOptions = (options: NormalizedSchema): GenerateApiLibSourcesExecutorSchema => {
+  let sourceSpecPathOrUrl = [options.projectRootApiSpecLib, options.sourceSpecFileRelativePath].join('/');
+  if (options.isRemoteSpec) {
+    if (typeof options.sourceSpecUrl === 'string') {
+      sourceSpecPathOrUrl = options.sourceSpecUrl;
+    }
+    else {
+      throw new Error('sourceSpecUrl must be a string');
+    }
+  }
   const executorOptions: GenerateApiLibSourcesExecutorSchema = {
     useDockerBuild: options.useDockerBuild,
     generator: options.generator,
     outputDir: options.outputDir,
-    sourceSpecPathOrUrl: options.isRemoteSpec
-      ? options.sourceSpecUrl!
-      : [options.projectRootApiSpecLib, options.sourceSpecFileRelativePath].join('/'),
+    sourceSpecPathOrUrl: sourceSpecPathOrUrl,
     additionalProperties: options.additionalProperties,
     globalProperties: options.globalProperties,
   };

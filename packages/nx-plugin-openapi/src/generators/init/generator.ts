@@ -12,7 +12,6 @@ import apiLibGenerator from '../api-lib/generator';
 import apiSpecGenerator from '../api-spec/generator';
 import { openapiGeneratorCliVersion } from '../../utils/versions';
 import { resolveClientPreset } from './client-presets';
-// @ts-ignore
 import { InitGeneratorSchema } from './schema';
 
 const DEFAULT_API_SPEC_NAME = 'api-spec';

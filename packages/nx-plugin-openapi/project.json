@@ -6,9 +6,8 @@
   "tags": [],
   "targets": {
     "lint": {
-      "executor": "@nrwl/eslint:lint",
       "options": {
-        "lintFilePatterns": ["packages/nx-plugin-openapi/**/*.ts"]
+        "args": ["**/*.ts"]
       }
     },
     "test": {

@@ -58,3 +58,8 @@ Generator/executor entry points are registered in `generators.json` / `executors
 - Commit messages are enforced as Conventional Commits via commitlint (`commitlint.config.js`) through a Husky `commit-msg` hook — non-conforming commit messages will be rejected locally.
 - Releases (`nx release`) use conventional-commits-based versioning and run automatically in `.github/workflows/publish.yml` on push to `main`; don't hand-bump versions in package.json.
 - New/changed lib import paths go through `tsconfig.base.json`'s `compilerOptions.paths` — the `api-lib` generator manages this automatically for generated libs, but check it if you touch path aliasing by hand.
+
+## Rules 
+**when asked to commit MUST ALWAYS use conventional commits**
+```<type>[optional scope]: <description> [optional body] [optional footer(s)]```
+** **

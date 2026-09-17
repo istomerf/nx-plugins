@@ -10,14 +10,14 @@ describe('resolveClientPreset', () => {
 
   it('resolves the react preset', () => {
     expect(resolveClientPreset('react')).toEqual({
-      generator: 'typescript-fetch',
+      generator: 'typescript-axios',
       additionalProperties: 'supportsES6=true,withInterfaces=true',
     });
   });
 
   it('resolves the vue preset', () => {
     expect(resolveClientPreset('vue')).toEqual({
-      generator: 'typescript-axios',
+      generator: 'typescript-fetch',
       additionalProperties: 'supportsES6=true,withSeparateModelsAndApi=true',
     });
   });
