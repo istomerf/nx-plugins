@@ -1,4 +1,4 @@
-schema: compressed-sdd
+schema: bdd
 context: >-
   Nx monorepo (pnpm workspaces) publishing a single Nx plugin,
   @istomerf/nx-plugin-openapi, to npm.
