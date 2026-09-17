@@ -81,7 +81,7 @@ Drop your own `.yml`/`.json` OpenAPI spec into that lib (replacing the sample sp
 
 ```sh
 nx generate @istomerf/nx-plugin-openapi:api-lib my-service-api-client \
-  --generator=typescript-fetch \
+  --apiGenerator=typescript-fetch \
   --sourceSpecLib=my-service-api-spec \
   --sourceSpecFileRelativePath=src/my-service-api-spec.openapi.yml
 ```
@@ -108,7 +108,7 @@ You don't need a local `api-spec` lib — point `api-lib` at a URL instead:
 
 ```sh
 nx generate @istomerf/nx-plugin-openapi:api-lib my-service-api-client \
-  --generator=typescript-fetch \
+  --apiGenerator=typescript-fetch \
   --isRemoteSpec \
   --sourceSpecUrl=https://petstore.swagger.io/v2/swagger.json
 ```
@@ -134,7 +134,7 @@ If a project named `apiSpecName` or `apiLibName` already exists, bootstrapping i
 
 #### Client presets
 
-`client` pre-selects a generator and sensible `additionalProperties` for a target framework, resolves them internally, and passes the resulting `generator`/`additionalProperties` pair through to the `api-lib` generator it bootstraps — so you don't have to look them up yourself:
+`client` pre-selects a generator and sensible `additionalProperties` for a target framework, resolves them internally, and passes the resulting `apiGenerator`/`additionalProperties` pair through to the `api-lib` generator it bootstraps — so you don't have to look them up yourself:
 
 | `client`   | Generator            | Default `additionalProperties`                          |
 | ---------- | --------------------- | --------------------------------------------------------- |
@@ -142,7 +142,7 @@ If a project named `apiSpecName` or `apiLibName` already exists, bootstrapping i
 | `react`    | `typescript-fetch`    | `supportsES6=true,withInterfaces=true`                     |
 | `vue`      | `typescript-axios`    | `supportsES6=true,withSeparateModelsAndApi=true`           |
 | `node`     | `typescript-node`     | `supportsES6=true`                                         |
-| `custom`   | *(none — set `generator` yourself)* |                                              |
+| `custom`   | *(none — set `apiGenerator` yourself)* |                                              |
 
 Note: `client`/preset support is currently limited to Nx v20+ workspaces using `tsconfig.base.json` path mappings (the same constraint the generator relies on for wiring up imports).
 
@@ -168,7 +168,7 @@ Scaffolds a lib whose `generate-sources` target runs `openapi-generator-cli` aga
 | `directory`                          | `-d`  | Directory to place the project in                                                                |               |
 | `tags`                               | `-t`  | Comma-separated Nx tags (for lint boundaries)                                                    |               |
 | `importPath`                         |       | Import path for the lib, e.g. `@myorg/my-lib`                                                     | `@<npmScope>/<dir>` |
-| `generator`                          | `-g`  | An `openapi-generator-cli` generator name (e.g. `typescript-fetch`). Required — there is no default | *(required)* |
+| `apiGenerator`                       | `-g`  | An `openapi-generator-cli` generator name (e.g. `typescript-fetch`). Required — there is no default | *(required)* |
 | `isRemoteSpec`                       | `-r`  | The spec file lives at a URL rather than in a workspace lib                                       |    `false`    |
 | `sourceSpecUrl`                      | `-u`  | URL of the remote spec file (when `isRemoteSpec`)                                                |               |
 | `sourceSpecUrlAuthorizationHeaders`  | `-a`  | URL-encoded `name:value` auth headers for the remote spec, comma-separated                       |               |
@@ -179,7 +179,7 @@ Scaffolds a lib whose `generate-sources` target runs `openapi-generator-cli` aga
 | `useDockerBuild`                     |       | Run the generator via `docker run openapitools/openapi-generator-cli` instead of `npx` — no local Java needed, but Docker is | `false` |
 | `skipFormat`                         |       | Skip running Prettier on generated files                                                         |    `false`    |
 
-There is no default `generator` — `api-lib` always requires it to be passed explicitly. (If you want a framework preset that picks a sensible `generator`/`additionalProperties` pair for you, use `init`'s `client` option instead — see [Client presets](#client-presets).)
+There is no default `apiGenerator` — `api-lib` always requires it to be passed explicitly. (If you want a framework preset that picks a sensible `apiGenerator`/`additionalProperties` pair for you, use `init`'s `client` option instead — see [Client presets](#client-presets).)
 
 ## ⚙️ `generate-api-lib-sources` executor
 

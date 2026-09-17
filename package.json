@@ -19,6 +19,7 @@
     "@nx/node": "23.2.1",
     "@nx/plugin": "23.2.1",
     "@nx/workspace": "23.2.1",
+    "@openapitools/openapi-generator-cli": "2.41.0",
     "@swc-node/register": "1.12.1",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.8",
@@ -49,5 +50,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/istomerf/nx-plugins.git"
-  }
+  },
+  "dependencies": {}
 }

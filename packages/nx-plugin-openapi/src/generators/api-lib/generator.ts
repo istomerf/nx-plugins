@@ -22,7 +22,7 @@ import { ApiLibGeneratorSchema } from './schema';
 
 const projectType: ProjectType = 'library';
 
-interface NormalizedSchema extends SetRequired<ApiLibGeneratorSchema, 'importPath' | 'generator'> {
+interface NormalizedSchema extends SetRequired<ApiLibGeneratorSchema, 'importPath' | 'apiGenerator'> {
   projectName: string;
   projectRoot: string;
   outputDir: string;
@@ -72,7 +72,7 @@ function normalizeOptions(host: Tree, options: ApiLibGeneratorSchema): Normalize
 
   return {
     ...options,
-    generator: options.generator,
+    apiGenerator: options.apiGenerator,
     additionalProperties: options.additionalProperties,
     importPath,
     projectName,
@@ -96,7 +96,7 @@ const getExecutorOptions = (options: NormalizedSchema): GenerateApiLibSourcesExe
   }
   const executorOptions: GenerateApiLibSourcesExecutorSchema = {
     useDockerBuild: options.useDockerBuild,
-    generator: options.generator,
+    generator: options.apiGenerator,
     outputDir: options.outputDir,
     sourceSpecPathOrUrl: sourceSpecPathOrUrl,
     additionalProperties: options.additionalProperties,

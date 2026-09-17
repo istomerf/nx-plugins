@@ -72,7 +72,7 @@ async function bootstrap(tree: Tree, schema: InitGeneratorSchema): Promise<Gener
     await apiLibGenerator(tree, {
       name: apiLibName,
       isRemoteSpec: false,
-      generator,
+      apiGenerator: generator,
       additionalProperties,
       useDockerBuild: schema.useDockerBuild ?? false,
       sourceSpecLib: apiSpecProjectName,

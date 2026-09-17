@@ -32,10 +32,10 @@ nx generate @istomerf/nx-plugin-openapi:init [--client=<preset>] [--apiSpecName=
 nx generate @istomerf/nx-plugin-openapi:api-spec <name> [-d dir] [-t tags] [--withSample] [--skipFormat]
 
 # SDK/docs lib from a local spec
-nx generate @istomerf/nx-plugin-openapi:api-lib <name> -g <generator> -l <sourceSpecLib> -f <path/to/spec.yml> [-d dir] [-t tags] [--importPath] [--additionalProperties] [--globalProperties] [--useDockerBuild] [--skipFormat]
+nx generate @istomerf/nx-plugin-openapi:api-lib <name> -g <apiGenerator> -l <sourceSpecLib> -f <path/to/spec.yml> [-d dir] [-t tags] [--importPath] [--additionalProperties] [--globalProperties] [--useDockerBuild] [--skipFormat]
 
 # SDK/docs lib from a remote spec
-nx generate @istomerf/nx-plugin-openapi:api-lib <name> -g <generator> -r -u <specUrl> [-a "Header:value"] ...
+nx generate @istomerf/nx-plugin-openapi:api-lib <name> -g <apiGenerator> -r -u <specUrl> [-a "Header:value"] ...
 
 # Actually generate/regenerate sources — never run automatically, run it explicitly after scaffolding or spec changes
 nx run <api-lib-name>:generate-sources
@@ -49,7 +49,7 @@ nx run <api-lib-name>:generate-sources
 |---|---|---|
 | `apiSpecName` | `api-spec` | |
 | `apiLibName` | `api-client` | |
-| `client` | `custom` | `custom \| angular \| react \| vue \| node` — see preset table below. Only affects the *bootstrapped* `api-lib`; irrelevant if you call `api-lib` directly (pass `generator`/`additionalProperties` yourself there). |
+| `client` | `custom` | `custom \| angular \| react \| vue \| node` — see preset table below. Only affects the *bootstrapped* `api-lib`; irrelevant if you call `api-lib` directly (pass `apiGenerator`/`additionalProperties` yourself there). |
 | `useDockerBuild` | `false` | Passed straight through to the bootstrapped `api-lib`. |
 | `skipBootstrap` | `false` | `true` → only ensures the `openapi-generator-cli` dev dependency, scaffolds nothing. This is exactly what `api-spec`/`api-lib` pass when they call `init` internally. |
 | `skipFormat` | `false` | |
@@ -83,7 +83,7 @@ This mapping is intentional (by design), not a typo — treat `client-presets.ts
 | Option | Alias | Notes |
 |---|---|---|
 | `name` | — | *(required, positional arg 0)* |
-| `generator` | `-g` | *(required, no default)* — an `openapi-generator-cli` generator name, e.g. `typescript-fetch`. Must always be passed explicitly unless going through `init`'s `client` preset. |
+| `apiGenerator` | `-g` | *(required, no default)* — an `openapi-generator-cli` generator name, e.g. `typescript-fetch`. Must always be passed explicitly unless going through `init`'s `client` preset. |
 | `directory` | `-d` | |
 | `tags` | `-t` | |
 | `importPath` | | Defaults to `@<npmScope>/<projectDirectory>`. Generator throws if the path is already claimed by another `tsconfig.base.json` path entry — surface that error rather than silently overwriting. |
@@ -129,6 +129,7 @@ Exit behavior: non-zero exit from the underlying CLI process rejects the executo
 
 - Forgetting to run `nx run <lib>:generate-sources` after `api-lib`/`init` scaffolding — the lib exists but has no generated sources yet, and any import from it will fail to resolve until this runs.
 - Re-running `generate-sources` and being surprised that hand edits inside `outputDir` vanished — that directory is fully derived, wiped every run by design.
-- Passing `--client` to `api-lib` directly — it's an `init`-only option; `api-lib` takes `--generator`/`--additionalProperties` directly instead.
-- Omitting `-g/--generator` on `api-lib` — there's no default, the generator call will fail its schema validation immediately.
+- Passing `--client` to `api-lib` directly — it's an `init`-only option; `api-lib` takes `--apiGenerator`/`--additionalProperties` directly instead.
+- Omitting `-g/--apiGenerator` on `api-lib` — there's no default, the generator call will fail its schema validation immediately.
+- Using `--generator` instead of `--apiGenerator`/`-g` on `nx generate ... api-lib` — `generator` is a reserved key on Nx's own `generate` command (the `collection:generator` selector) and gets stripped before reaching the plugin's schema, so it silently fails schema validation with "Required property 'apiGenerator' is missing" no matter what value you pass.
 - Using `useDockerBuild` while running `generate-sources` from somewhere other than the workspace root — paths won't resolve inside the container mount.

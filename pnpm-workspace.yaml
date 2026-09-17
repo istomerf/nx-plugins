@@ -1,6 +1,7 @@
 packages:
   - 'packages/*'
 allowBuilds:
+  '@openapitools/openapi-generator-cli': set this to true or false
   '@parcel/watcher': true
   '@swc/core': true
   nx: true

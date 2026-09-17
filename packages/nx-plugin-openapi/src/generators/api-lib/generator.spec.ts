@@ -17,7 +17,7 @@ describe('api-lib schematic', () => {
   const defaultSchema = {
     name: 'my-lib',
     isRemoteSpec: false,
-    generator: 'typescript-fetch',
+    apiGenerator: 'typescript-fetch',
     skipFormat: true,
   } satisfies ApiLibGeneratorSchema;
 
@@ -60,7 +60,7 @@ describe('api-lib schematic', () => {
       it('should create or update project configuration', async () => {
         await libraryGenerator(appTree, remoteSchema);
         const options = {
-          generator: remoteSchema.generator,
+          generator: remoteSchema.apiGenerator,
           sourceSpecPathOrUrl: sourceSpecUrl,
         } satisfies Partial<GenerateApiLibSourcesExecutorSchema>;
         const { root, targets } = readProjectConfiguration(appTree, defaultSchema.name);
@@ -97,7 +97,7 @@ describe('api-lib schematic', () => {
       it('should update workspace.json', async () => {
         await libraryGenerator(appTree, localSchema);
         const options: Partial<GenerateApiLibSourcesExecutorSchema> = {
-          generator: localSchema.generator,
+          generator: localSchema.apiGenerator,
           sourceSpecPathOrUrl: ['libs', localSchema.sourceSpecLib, localSchema.sourceSpecFileRelativePath].join('/'),
         };
         const { root, targets } = readProjectConfiguration(appTree, defaultSchema.name);
@@ -119,7 +119,7 @@ describe('api-lib schematic', () => {
       it('should add a watch-sources target wired to the watch-api-lib-sources executor', async () => {
         await libraryGenerator(appTree, localSchema);
         const options: Partial<GenerateApiLibSourcesExecutorSchema> = {
-          generator: localSchema.generator,
+          generator: localSchema.apiGenerator,
           sourceSpecPathOrUrl: ['libs', localSchema.sourceSpecLib, localSchema.sourceSpecFileRelativePath].join('/'),
         };
         const { targets } = readProjectConfiguration(appTree, defaultSchema.name);
@@ -138,9 +138,9 @@ describe('api-lib schematic', () => {
       });
     });
 
-    it('requires generator to be set', () => {
-      // @ts-expect-error - generator is required
-      const invalidSchema: ApiLibGeneratorSchema = { ...defaultSchema, generator: undefined };
+    it('requires apiGenerator to be set', () => {
+      // @ts-expect-error - apiGenerator is required
+      const invalidSchema: ApiLibGeneratorSchema = { ...defaultSchema, apiGenerator: undefined };
 
       expect(invalidSchema).toBeDefined();
     });

@@ -1,7 +1,7 @@
 export interface ApiLibGeneratorSchema {
   name: string;
   useDockerBuild?: boolean;
-  generator: string;
+  apiGenerator: string;
   tags?: string;
   directory?: string;
   importPath?: string;

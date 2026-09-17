@@ -20,7 +20,7 @@
       "default": false,
       "x-prompt": "Should the build occur inside of a docker container?"
     },
-    "generator": {
+    "apiGenerator": {
       "type": "string",
       "description": "The generator this lib will use to build an API SDK (e.g.: typescript-fetch). There is no default — this must always be supplied.",
       "alias": "g"
@@ -90,6 +90,6 @@
   },
   "required": [
     "name",
-    "generator"
+    "apiGenerator"
   ]
 }
