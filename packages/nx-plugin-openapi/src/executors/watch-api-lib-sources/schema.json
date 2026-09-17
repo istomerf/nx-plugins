@@ -1,0 +1,58 @@
+{
+  "version": 2,
+  "outputCapture": "direct-nodejs",
+  "continuous": true,
+  "$schema": "http://json-schema.org/schema",
+  "title": "WatchApiLibSources builder",
+  "description": "Watch a local OpenAPI spec file and regenerate API lib source files via @openapitools/openapi-generator-cli on change",
+  "type": "object",
+  "properties": {
+    "useDockerBuild": {
+      "type": "boolean",
+      "description": "Should the build occur inside of a docker container",
+      "default": false
+    },
+    "generator": {
+      "type": "string",
+      "description": "The OpenAPITools generator you want to use",
+      "default": "typescript-angular"
+    },
+    "additionalProperties": {
+      "type": "string",
+      "description": "The additional properties you want to pass to the generator"
+    },
+    "globalProperties": {
+      "type": "string",
+      "description": "The global properties you want to pass to the generator"
+    },
+    "typeMappings": {
+      "type": "string",
+      "description": "What to map OpenAPI types to. E.g. DateTime to Date"
+    },
+    "sourceSpecPathOrUrl": {
+      "type": "string",
+      "description": "The path (relative to the workspace root) where the source OpenAPI spec file is located at. Must be a local file - remote (http/https) specs are not supported in watch mode"
+    },
+    "outputDir": {
+      "type": "string",
+      "description": "The path (relative to the workspace root) or URL where the generated OpenAPI file should go to"
+    },
+    "sourceSpecUrlAuthorizationHeaders": {
+      "type": "string",
+      "description": "A URL-encoded string of name:header with a comma separating multiple values"
+    },
+    "silent": {
+      "type": "boolean",
+      "description": "Whether or not to suppress generator output",
+      "default": false
+    },
+    "ignoreList": {
+      "type": "array",
+      "description": "A list of entries to pre-populate .openapi-generator-ignore with",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": []
+}
